@@ -1,0 +1,40 @@
+# FastAPI and Server
+fastapi==0.115.0
+uvicorn[standard]==0.30.6
+python-dotenv==1.0.1
+
+# ORM / Database
+sqlmodel==0.0.22           # ORM for PostgreSQL (SQLAlchemy + Pydantic)
+psycopg2-binary==2.9.9     # PostgreSQL driver
+
+# MongoDB ODM (Beanie + Motor + pymongo)
+beanie==1.25.0
+motor==3.5.1
+pymongo==4.8.0
+
+
+# Message Broker & Async Tasks
+celery==5.3.6
+redis==5.0.1
+pika==1.3.2                 # Optional for RabbitMQ connection utils
+
+# RabbitMQ client library (for Celery broker)
+kombu==5.3.5
+
+# Data validation and serialization
+pydantic==2.9.2
+pydantic-settings==2.3.4
+
+# HTTP client for external calls (used later for AI API calls)
+requests==2.32.3
+aiohttp==3.10.5
+
+# Logging & monitoring
+flower==2.0.1               # Celery dashboard
+loguru==0.7.2
+
+# Dev & Utility
+alembic==1.13.2             # Migrations for SQLModel
+pytest==8.3.2               # Testing
+black==24.10.0              # Code formatting
+isort==5.13.2               # Imports formatting

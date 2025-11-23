@@ -1,0 +1,10 @@
+from celery import Celery
+import os
+
+broker_url = f"amqp://{os.getenv('RABBITMQ_DEFAULT_USER')}:{os.getenv('RABBITMQ_DEFAULT_PASS')}@rabbitmq:5672//"
+backend_url = f"redis://{os.getenv('REDIS_HOST')}:{os.getenv('REDIS_PORT')}/0"
+
+celery = Celery("tradesense", broker=broker_url, backend=backend_url)
+
+def send_to_queue(data):
+    celery.send_task("tasks.process_data", args=[data])

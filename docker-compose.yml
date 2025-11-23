@@ -1,0 +1,79 @@
+version: '3.9'
+
+services:
+  api:
+    build: ./services/api
+    container_name: tradesense-api
+    env_file: .env
+    ports:
+      - "8000:8000"
+    depends_on:
+      - mongo
+      - postgres
+      - redis
+      - rabbitmq
+
+  worker:
+    build:
+      context: ./services
+      dockerfile: worker/Dockerfile
+    container_name: tradesense-worker
+    env_file: .env
+    command: celery -A celery_app worker --loglevel=info
+    depends_on:
+      - redis
+      - rabbitmq
+      - mongo
+      - postgres
+    restart: always
+
+  flower:
+    image: mher/flower
+    container_name: flower
+    environment:
+      - CELERY_BROKER_URL=amqp://guest:guest@rabbitmq:5672//
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+      - FLOWER_BROKER_API=http://${RABBITMQ_DEFAULT_USER}:${RABBITMQ_DEFAULT_PASS}@rabbitmq:15672/api/
+    ports:
+      - "5555:5555"
+    depends_on:
+      - rabbitmq
+      - redis
+    restart: always
+
+  mongo:
+    image: mongo:5
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:6
+    container_name: redis
+    ports:
+      - "6379:6379"
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+volumes:
+  mongo_data:
+  pg_data:

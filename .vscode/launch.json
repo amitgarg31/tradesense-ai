@@ -1,0 +1,68 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Python: FastAPI (API Service)",
+      "type": "python",
+      "request": "launch",
+      "module": "uvicorn",
+      "args": [
+        "services.api.main:app",
+        "--reload",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "8000"
+      ],
+      "cwd": "${workspaceFolder}",
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}",
+        "MONGO_URI_LOCAL": "mongodb://localhost:27018",
+        "POSTGRES_USER": "user",
+        "POSTGRES_PASSWORD": "password",
+        "POSTGRES_DB": "tradesense",
+        "POSTGRES_HOST": "localhost",
+        "POSTGRES_PORT": "5433",
+        "REDIS_HOST": "localhost",
+        "REDIS_PORT": "6380",
+        "RABBITMQ_HOST": "localhost",
+        "RABBITMQ_PORT": "5673"
+      },
+      "jinja": true,
+      "justMyCode": true
+    },
+    {
+      "name": "Python: Celery Worker",
+      "type": "python",
+      "request": "launch",
+      "module": "celery",
+      "args": [
+        "-A",
+        "services.worker.celery_app",
+        "worker",
+        "--loglevel=info",
+        "-P",
+        "solo"
+      ],
+      "cwd": "${workspaceFolder}",
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}",
+        "MONGO_URI_LOCAL": "mongodb://localhost:27018",
+        "REDIS_HOST": "localhost",
+        "REDIS_PORT": "6380",
+        "RABBITMQ_HOST": "localhost",
+        "RABBITMQ_PORT": "5673"
+      }
+    },
+    {
+      "name": "Chrome: Frontend",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:5173",
+      "webRoot": "${workspaceFolder}/frontend/src",
+      "sourceMapPathOverrides": {
+        "webpack:///./src/*": "${webRoot}/*"
+      }
+    }
+  ]
+}

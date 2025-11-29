@@ -1,0 +1,63 @@
+.analytics {
+  padding: var(--spacing-lg) 0;
+}
+
+.analytics-header {
+  margin-bottom: var(--spacing-lg);
+}
+
+.analytics-header h1 {
+  margin-bottom: 0.5rem;
+}
+
+.analytics-header p {
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.query-panel {
+  margin-bottom: var(--spacing-lg);
+}
+
+.query-panel h3 {
+  margin-bottom: var(--spacing-md);
+}
+
+.query-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: var(--spacing-md);
+  align-items: end;
+}
+
+.results-section h3 {
+  margin-bottom: var(--spacing-md);
+}
+
+.trades-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--spacing-md);
+}
+
+.empty-state {
+  text-align: center;
+  padding: var(--spacing-xl);
+  color: var(--text-muted);
+}
+
+@media (max-width: 768px) {
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .trades-grid {
+    grid-template-columns: 1fr;
+  }
+}

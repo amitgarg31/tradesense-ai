@@ -21,6 +21,10 @@ RUN pip install --no-cache-dir sqlmodel psycopg2-binary alembic
 # Install MongoDB dependencies (matching API versions)
 RUN pip install --no-cache-dir beanie==1.25.0 motor==3.5.1 pymongo==4.8.0
 
+# Install LLM dependencies
+RUN pip install --no-cache-dir openai==1.55.0 google-generativeai==0.8.3
+
+
 # Set PYTHONPATH so 'services.worker' is importable
 ENV PYTHONPATH=/app
 

@@ -38,3 +38,8 @@ alembic==1.13.2             # Migrations for SQLModel
 pytest==8.3.2               # Testing
 black==24.10.0              # Code formatting
 isort==5.13.2               # Imports formatting
+
+# LLM / AI
+openai==1.55.0
+google-generativeai==0.8.3
+

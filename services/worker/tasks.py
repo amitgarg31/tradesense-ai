@@ -66,6 +66,43 @@ def process_data(data):
         print(f"❌ Error: {e}")
         return {"status": "failed", "error": str(e)}
 
+from services.api.app.models.trade_mongo import TradeDocument, SummaryDocument
+from services.api.app.utils.llm_client import LLMClient
+
+@shared_task(name="tasks.generate_summary")
+def generate_summary(symbol: str):
+    print(f"🧠 Generating summary for {symbol}...")
+    asyncio.run(run_summary_pipeline(symbol))
+
+async def run_summary_pipeline(symbol: str):
+    await init_mongo()
+    
+    # Fetch recent trades
+    trades = await TradeDocument.find(TradeDocument.symbol == symbol).sort("-timestamp").limit(20).to_list()
+    
+    if not trades:
+        print(f"⚠️  No trades found for {symbol} to summarize.")
+        return
+
+    # Format data for LLM
+    trade_text = "\n".join([f"Price: {t.price} at {t.timestamp}" for t in trades])
+    
+    llm = LLMClient()
+    summary_text = llm.generate_summary(trade_text)
+    embedding = llm.generate_embedding(summary_text)
+    
+    if summary_text and embedding:
+        summary_doc = SummaryDocument(
+            symbol=symbol,
+            summary=summary_text,
+            embedding=embedding,
+            timestamp=datetime.utcnow()
+        )
+        await summary_doc.insert()
+        print(f"✅ Summary generated and saved for {symbol}")
+    else:
+        print("❌ Failed to generate summary or embedding.")
+
 async def save_to_databases(symbol: str, price: float, timestamp: datetime):
     # Init Mongo
     await init_mongo()

@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from services.api.app.routes import ingest, query 
+from services.api.app.routes import ingest, query, insights
 from services.api.app.core.mongo_orm import init_mongo
 from services.api.app.core.db_session import init_db
 from services.api.app.routes.ws import router as ws_router, start_redis_listener, stop_redis_listener
@@ -18,6 +18,7 @@ async def on_shutdown():
 
 app.include_router(ingest.router, prefix="/ingest", tags=["Ingestion"])
 app.include_router(query.router, prefix="/query", tags=["Query"])
+app.include_router(insights.router, prefix="/insights", tags=["Insights"])
 app.include_router(ws_router)
 
 @app.get("/health")

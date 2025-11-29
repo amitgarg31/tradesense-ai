@@ -35,7 +35,7 @@ services:
       - CELERY_RESULT_BACKEND=redis://redis:6379/0
       - FLOWER_BROKER_API=http://${RABBITMQ_DEFAULT_USER}:${RABBITMQ_DEFAULT_PASS}@rabbitmq:15672/api/
     ports:
-      - "5555:5555"
+      - "5556:5555"
     depends_on:
       - rabbitmq
       - redis
@@ -45,7 +45,7 @@ services:
     image: mongo:5
     container_name: mongo
     ports:
-      - "27017:27017"
+      - "27018:27017"
     volumes:
       - mongo_data:/data/db
 
@@ -57,7 +57,7 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
       - pg_data:/var/lib/postgresql/data
 
@@ -65,14 +65,14 @@ services:
     image: redis:6
     container_name: redis
     ports:
-      - "6379:6379"
+      - "6380:6379"
 
   rabbitmq:
     image: rabbitmq:3-management
     container_name: rabbitmq
     ports:
-      - "5672:5672"
-      - "15672:15672"
+      - "5673:5672"
+      - "15673:15672"
 
 volumes:
   mongo_data:

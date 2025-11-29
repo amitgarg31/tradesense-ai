@@ -1,9 +1,10 @@
-from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 import asyncio
-import os
 import json
-import redis.asyncio as aioredis
 import logging
+import os
+
+import redis.asyncio as aioredis
+from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
@@ -12,6 +13,7 @@ REDIS_HOST = os.getenv("REDIS_HOST", "redis")
 REDIS_PORT = int(os.getenv("REDIS_PORT", 6379))
 CHANNEL = "trade_events"
 
+
 class ConnectionManager:
     def __init__(self):
         self.active_connections: set[WebSocket] = set()
@@ -19,16 +21,20 @@ class ConnectionManager:
     async def connect(self, websocket: WebSocket):
         await websocket.accept()
         self.active_connections.add(websocket)
-        logger.info(f"WebSocket connected. Total connections: {len(self.active_connections)}")
+        logger.info(
+            f"WebSocket connected. Total connections: {len(self.active_connections)}"
+        )
 
     def disconnect(self, websocket: WebSocket):
         self.active_connections.discard(websocket)
-        logger.info(f"WebSocket disconnected. Total connections: {len(self.active_connections)}")
+        logger.info(
+            f"WebSocket disconnected. Total connections: {len(self.active_connections)}"
+        )
 
     async def broadcast(self, message: dict):
         if not self.active_connections:
             return  # No one to send to
-        
+
         data = json.dumps(message)
         dead = []
         for ws in self.active_connections:
@@ -47,14 +53,14 @@ _listener_task = None
 
 async def redis_listener():
     """
-    Background task: listens to Redis Pub/Sub and broadcasts messages to WebSocket clients.
+    Background task: listens to Redis Pub/Sub and broadcasts messages.
     Includes reconnection logic for reliability.
     """
     client = None
     pubsub = None
     reconnect_delay = 1
     max_reconnect_delay = 30
-    
+
     while True:
         try:
             # Create Redis connection
@@ -63,17 +69,17 @@ async def redis_listener():
                     f"redis://{REDIS_HOST}:{REDIS_PORT}",
                     socket_connect_timeout=5,
                     socket_timeout=5,
-                    retry_on_timeout=True
+                    retry_on_timeout=True,
                 )
                 logger.info(f"🔌 Connected to Redis at {REDIS_HOST}:{REDIS_PORT}")
-            
+
             # Create pubsub and subscribe
             if pubsub is None:
                 pubsub = client.pubsub()
                 await pubsub.subscribe(CHANNEL)
                 logger.info(f"📡 Subscribed to Redis channel: {CHANNEL}")
                 reconnect_delay = 1  # Reset delay on successful connection
-            
+
             # Listen for messages
             async for msg in pubsub.listen():
                 if msg["type"] == "message":
@@ -85,26 +91,30 @@ async def redis_listener():
                         logger.error(f"❌ Failed to parse message: {e}")
                     except Exception as e:
                         logger.error(f"❌ Error broadcasting message: {e}")
-                        
+
         except (ConnectionError, OSError, TimeoutError) as e:
-            logger.error(f"❌ Redis connection error: {e}. Reconnecting in {reconnect_delay}s...")
+            logger.error(
+                f"❌ Redis connection error: {e}. Reconnecting in {reconnect_delay}s..."
+            )
             # Clean up connections
             if pubsub:
                 try:
                     await pubsub.unsubscribe(CHANNEL)
                     await pubsub.close()
-                except:
+                except Exception:
                     pass
                 pubsub = None
             if client:
                 try:
                     await client.close()
-                except:
+                except Exception:
                     pass
                 client = None
             await asyncio.sleep(reconnect_delay)
-            reconnect_delay = min(reconnect_delay * 2, max_reconnect_delay)  # Exponential backoff
-            
+            reconnect_delay = min(
+                reconnect_delay * 2, max_reconnect_delay
+            )  # Exponential backoff
+
         except Exception as e:
             logger.error(f"❌ Unexpected error in Redis listener: {e}")
             # Clean up connections
@@ -112,13 +122,13 @@ async def redis_listener():
                 try:
                     await pubsub.unsubscribe(CHANNEL)
                     await pubsub.close()
-                except:
+                except Exception:
                     pass
                 pubsub = None
             if client:
                 try:
                     await client.close()
-                except:
+                except Exception:
                     pass
                 client = None
             await asyncio.sleep(reconnect_delay)

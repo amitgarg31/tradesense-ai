@@ -9,6 +9,7 @@
 TradeSense AI captures live market data, computes analytics, and generates human-readable trade opportunities and summaries using Retrieval-Augmented Generation (RAG) with LLMs. The system is event-driven, scalable, and hardened for production use.
 
 Primary goals:
+
 - Build a production-grade system that can be hosted on AWS (free-tier conscious)
 - Showcase skills: FastAPI, Django (admin), MongoDB, Postgres (RDS), Redis, Celery, RabbitMQ, AWS (EC2, Lambda, API Gateway, S3), Kubernetes, ArgoCD, Jenkins, encryption, and LLM/RAG
 - Maintain weekly public progress updates for portfolio and LinkedIn
@@ -72,18 +73,21 @@ tradesense-ai/
 > Goal: Run the core services locally with Docker Compose: FastAPI, MongoDB, PostgreSQL, RabbitMQ, Redis, Celery worker.
 
 1. Clone repository:
+
 ```bash
 git clone https://github.com/<your-user>/tradesense-ai.git
 cd tradesense-ai
 ```
 
 2. Copy env template and adjust values:
+
 ```bash
 cp .env.example .env
 # edit .env to set SERVICE_PORTS, DB creds, LLM settings, JWT secret
 ```
 
 3. Start services with Docker Compose:
+
 ```bash
 docker-compose up --build
 ```
@@ -93,6 +97,7 @@ docker-compose up --build
 5. Load sample market data (scripts/load_sample_data.py) to simulate live stream.
 
 6. Access the API:
+
 - FastAPI docs: `http://localhost:8000/docs`
 - Django admin: `http://localhost:8001/admin` (create superuser via `scripts/create_admin.sh`)
 
@@ -155,9 +160,10 @@ Security considerations and costs are in `docs/aws_cost_and_security.md`.
 ## 📝 Weekly Update Template (for LinkedIn)
 
 **Week X — TradeSense AI Update**
-- What I built this week: *short summary*
-- Key learnings: *what new tech / pitfalls*
-- Screenshot or GIF: *API response, Grafana panel, deployment log*
+
+- What I built this week: _short summary_
+- Key learnings: _what new tech / pitfalls_
+- Screenshot or GIF: _API response, Grafana panel, deployment log_
 - Link to repo: `https://github.com/<your-user>/tradesense-ai`
 
 ---
@@ -190,8 +196,6 @@ MIT License — see `LICENSE` file.
 
 Your Name — `your.email@example.com` | GitHub: `https://github.com/<your-user>` | LinkedIn: `https://linkedin.com/in/<your-user>`
 
-
 ---
 
 _End of README — Proceed to Phase 1 scaffolding when ready._
-

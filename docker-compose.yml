@@ -1,4 +1,4 @@
-version: '3.9'
+version: "3.9"
 
 services:
   api:
@@ -7,11 +7,22 @@ services:
     env_file: .env
     ports:
       - "8000:8000"
+    volumes:
+      - ./services/api:/app
     depends_on:
       - mongo
       - postgres
       - redis
       - rabbitmq
+
+  frontend:
+    build: ./frontend
+    container_name: tradesense-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - api
+    restart: always
 
   worker:
     build:

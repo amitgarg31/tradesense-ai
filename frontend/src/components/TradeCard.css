@@ -1,0 +1,55 @@
+.trade-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.trade-card.live-pulse {
+  animation: livePulse 2s ease-in-out infinite;
+}
+
+@keyframes livePulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4);
+  }
+
+  50% {
+    box-shadow: 0 0 20px 10px rgba(16, 185, 129, 0);
+  }
+}
+
+.trade-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.trade-symbol {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.symbol-icon {
+  font-size: 1.5rem;
+}
+
+.symbol-text {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.trade-price {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--accent-primary);
+  margin-bottom: 0.5rem;
+}
+
+.trade-time {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}

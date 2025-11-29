@@ -42,4 +42,3 @@ isort==5.13.2               # Imports formatting
 # LLM / AI
 openai==1.55.0
 google-generativeai==0.8.3
-

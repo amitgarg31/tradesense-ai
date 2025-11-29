@@ -1,16 +1,19 @@
-from beanie import Document
-from datetime import datetime
-from pydantic import Field
 import uuid
+from datetime import datetime
+
+from beanie import Document
+from pydantic import Field
+
 
 class TradeDocument(Document):
-    id : uuid.UUID = Field(default_factory=uuid.uuid4)
+    id: uuid.UUID = Field(default_factory=uuid.uuid4)
     symbol: str
     price: float
     timestamp: datetime = Field(default_factory=datetime.utcnow)
 
     class Settings:
         name = "trades"
+
 
 class SummaryDocument(Document):
     id: uuid.UUID = Field(default_factory=uuid.uuid4)
@@ -21,4 +24,3 @@ class SummaryDocument(Document):
 
     class Settings:
         name = "llm_summaries"
-
